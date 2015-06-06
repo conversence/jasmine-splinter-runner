@@ -1,31 +1,37 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-import re
+from datetime import datetime, timedelta
 
-from jasmine_runner.extractors import BaseExtractor, class_xpath_to_css
+from jasmine_runner.extractors import BaseExtractor
 
 
 class Extractor(BaseExtractor):
 
     def __init__(self, browser):
         super(Extractor, self).__init__(browser)
+        self.expected_load = datetime.now() + timedelta(seconds=5)
+        self.timeout = False
 
     @staticmethod
     def is_it_me(browser):
-        if browser.is_element_present_by_id('mocha'):
-            return True
+        return browser.is_element_present_by_id('mocha')
 
     def has_finished(self):
-        return self.browser.evaluate_script(
-            'window.mocha !== undefined && !window.mocha.suite.pending')
+        if self.browser.evaluate_script('window.mocha == undefined'):
+            if datetime.now() > self.expected_load:
+                self.timeout = True
+                return True
+            return False
+        return self.browser.evaluate_script('!window.mocha.suite.pending')
 
     def has_failed(self):
-        self.failures_number > 0
+        return self.timeout or (self.failures_number > 0)
 
     @property
     def failures_number(self):
-        return int(self.browser.find_by_id('mocha-stats').first.find_by_css('.failures').first.find_by_tag('em').first.text)
+        return 1 if self.timeout else int(
+            self.browser.find_by_id('mocha-stats').first.find_by_css('.failures').first.find_by_tag('em').first.text)
 
     @property
     def description(self):
@@ -40,6 +46,9 @@ class Extractor(BaseExtractor):
                 , ...]
             , ...]
         '''
+
+        if self.timeout:
+            return [{'mocha loading': ['mocha failed to load']}]
 
         def parent_suite(test):
             parents = test.find_by_xpath("ancestor::li[@class='suite']")
