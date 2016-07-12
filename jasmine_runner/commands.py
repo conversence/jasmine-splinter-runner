@@ -20,6 +20,12 @@ class TestSuiteNotDetectedError(Exception):
 
 
 def run_specs_with_browser(path, browser, quit=True):
+    extractor = run_extractor_with_browser(path, browser, quit)
+    return extractor.failures_number
+
+
+def run_extractor_with_browser(path, browser, quit=True):
+
     browser.visit(path)
 
     try:
@@ -34,7 +40,7 @@ def run_specs_with_browser(path, browser, quit=True):
     if quit:
         browser.quit()
 
-    return extractor.failures_number
+    return extractor
 
 
 def run_specs(path, browser_driver='firefox'):
