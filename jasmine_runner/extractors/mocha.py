@@ -50,14 +50,18 @@ class Extractor(BaseExtractor):
         if self.timeout:
             return [{'mocha loading': ['mocha failed to load']}]
 
+        def get_title(test):
+            title = test.find_by_xpath("h1|h2|h3|h4|h5").first.find_by_tag('a').html
+            return title
+
         def parent_suite(test):
             parents = test.find_by_xpath("ancestor::li[@class='suite']")
             if parents:
                 return parents.first
 
         def treat_failure(failure):
-            title = failure.find_by_xpath("h1|h2|h3|h4|h5").first.text
-            content = failure.find_by_css(".error").text
+            title = get_title(failure)
+            content = failure.find_by_css(".error").html
             return {title: [content]}
 
         def treat_suite(suite):
@@ -69,7 +73,7 @@ class Extractor(BaseExtractor):
                 if parent_suite(t)._element._id == suite._element._id]
             subsuites = [treat_suite(s) for s in suite.find_by_css(".suite")]
             subsuites = [s for s in subsuites if s is not None]
-            title = suite.find_by_xpath("h1|h2|h3|h4|h5").first.text
+            title = get_title(suite)
             subsuites.extend([treat_failure(f) for f in direct_failures])
             if subsuites:
                 return {title: subsuites}
