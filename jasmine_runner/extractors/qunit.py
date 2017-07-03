@@ -47,7 +47,7 @@ class Extractor(BaseExtractor):
             suite_description_node.click()
             description = suite_description_node.text
 
-            fail_messages = map(lambda el: el.text, suite.find_by_xpath('ol/li%s' % class_xpath_to_css('fail')))
+            fail_messages = [el.text for el in suite.find_by_xpath('ol/li%s' % class_xpath_to_css('fail'))]
 
             specs.append({
                 description: fail_messages

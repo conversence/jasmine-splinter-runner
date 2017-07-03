@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+from builtins import object
 def class_xpath_to_css(_class):
     return '[contains(concat(" ",normalize-space(@class)," ")," %s ")]' % _class
 

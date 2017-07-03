@@ -61,7 +61,7 @@ class Extractor(BaseExtractor):
                         children
                     )
                 elif 'spec' in describe['class']:
-                    children.extend(map(lambda el: el.text, describe.find_by_css('.resultMessage')))
+                    children.extend([el.text for el in describe.find_by_css('.resultMessage')])
 
         traverse(rootDescribes, specs)
 

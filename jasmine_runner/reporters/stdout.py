@@ -2,6 +2,7 @@
 # -*- coding:utf-8 -*-
 
 from __future__ import print_function
+from past.builtins import basestring
 import sys
 
 import termcolor
@@ -41,7 +42,7 @@ def format_errors(errors):
 
 
 def _print(obj, buffer, level):
-    for title, desc in obj.iteritems():
+    for title, desc in obj.items():
         buffer.append((level * 2 * ' ') + title.encode('utf8'))
         if desc and isinstance(desc[0], basestring):
             for err in desc:
