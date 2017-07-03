@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+from __future__ import print_function
 import sys
 
 import termcolor
@@ -18,18 +19,18 @@ def print_result(extractor):
 
 
 def print_success(extractor):
-    print
-    print colored('✓ %s' % extractor.description.encode('utf8'), 'green')
-    print
+    print()
+    print(colored('✓ %s' % extractor.description.encode('utf8'), 'green'))
+    print()
 
 
 def print_errors(extractor):
-    print
-    print colored(extractor.description, 'yellow')
-    print
+    print()
+    print(colored(extractor.description, 'yellow'))
+    print()
 
-    print format_errors(extractor.get_failures())
-    print
+    print(format_errors(extractor.get_failures()))
+    print()
 
 
 def format_errors(errors):

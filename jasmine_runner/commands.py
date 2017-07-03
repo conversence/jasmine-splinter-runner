@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
+from __future__ import print_function
+from __future__ import absolute_import
 import argparse
 import os
 import re
@@ -8,11 +10,11 @@ import sys
 import warnings
 
 from splinter.browser import Browser
-from extractors.jasmine import Extractor as JExtractor
-from extractors.jasmine2 import Extractor as J2Extractor
-from extractors.qunit import Extractor as QExtractor
-from extractors.mocha import Extractor as MochaExtractor
-from reporters.stdout import print_result
+from .extractors.jasmine import Extractor as JExtractor
+from .extractors.jasmine2 import Extractor as J2Extractor
+from .extractors.qunit import Extractor as QExtractor
+from .extractors.mocha import Extractor as MochaExtractor
+from .reporters.stdout import print_result
 
 
 class TestSuiteNotDetectedError(Exception):
@@ -44,8 +46,8 @@ def run_extractor_with_browser(path, browser, quit=True):
 
 
 def run_specs(path, browser_driver='firefox'):
-    print
-    print 'Using %s as runner and %s as webdriver.' % (path, browser_driver)
+    print()
+    print('Using %s as runner and %s as webdriver.' % (path, browser_driver))
 
     browser = Browser(browser_driver)
     return run_specs_with_browser(path, browser)
